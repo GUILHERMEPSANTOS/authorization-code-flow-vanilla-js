@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  identity:
+    image: quay.io/keycloak/keycloak:25.0
+    container_name: vannila-js-identity
+    command: start-dev --import-realm
+    environment:
+      - KC_HEALTH_ENABLED=true
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    volumes:
+      - ./.containers/identity:/opt/keycloak/data
+      - ./.files:/opt/keycloak/data/import
+    ports:
+      - 18080:8080

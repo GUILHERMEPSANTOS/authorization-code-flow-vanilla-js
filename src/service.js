@@ -9,13 +9,13 @@ export default class Service {
 
     #init() {
         this.#keycloak = new KeycloakBuilder()
-            .withClientId("")
-            .withClientSecret("")
-            .withRealm("")
-            .withRedirectUri("")
-            .withResponseType("")
-            .withScope("")
-            .withUrl()
+            .withClientId("vannila-js-front")
+            .withClientSecret("xTFJtGno0j0rBUiaOsLQTy7ygBkB0Lai")
+            .withRealm("vannila-js-identity")
+            .withRedirectUri("http://localhost:3000")
+            .withResponseType("code")
+            .withScope("openid")
+            .withUrl("http://localhost:18080/")
             .build();
 
         this.#keycloak.getAuthUrl(
@@ -23,8 +23,8 @@ export default class Service {
         )
     }
 
-    getAuthUrl(url) {
-        return url;
+    getAuthUrl() {
+        return this.#keycloak.getAuthUrl();
     }
 
 }

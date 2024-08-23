@@ -20,6 +20,6 @@ export default class Controller {
     }
 
     configureOnClickRedirectKeycloak() {
-        console.log(this.#service.getAuthUrl())
+        window.location.href = this.#service.getAuthUrl();
     }
 }

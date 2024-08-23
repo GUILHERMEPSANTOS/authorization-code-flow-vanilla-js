@@ -23,8 +23,11 @@ class Keycloak {
 
     #init() {
         this.#code_verifier = this.#generateCodeVerifier();
-        this.#code_challenge = this.#generateCodeChallenge();
-        this.#code_challenge_method = "S256"
+        
+        this.#generateCodeChallenge()
+            .then(code_challenge => this.#code_challenge = code_challenge);
+
+        this.#code_challenge_method = "S256";
     }
 
     getAuthUrl(fn) {
@@ -38,7 +41,7 @@ class Keycloak {
             code_challenge: this.#code_challenge,
         });
 
-        fn(this.#url + `/realms` + `/${this.#realm}` + `/protocol/openid-connect/auth?${queryParams}`)
+        return this.#url + `/realms` + `/${this.#realm}` + `/protocol/openid-connect/auth?${queryParams}`
     }
 
     #buildQueryParams(params) {
@@ -56,16 +59,17 @@ class Keycloak {
             .replace(/=+$/, '');
     }
 
-    #sha256(plain) {
+    async #sha256(plain) {
         const encoder = new TextEncoder();
         const data = encoder.encode(plain);
-        return window.crypto.subtle.digest('SHA-256', data);
+        return await window.crypto.subtle.digest('SHA-256', data);
     }
 
-    #generateCodeChallenge() {
+    async #generateCodeChallenge() {
         if (!this.#code_verifier) throw new Error("Code Verifier is null");
 
-        const hash = this.#sha256(this.#code_verifier);
+        const hash = await this.#sha256(this.#code_verifier);
+
         return btoa(String.fromCharCode.apply(null, new Uint8Array(hash)))
             .replace(/\+/g, '-')
             .replace(/\//g, '_')

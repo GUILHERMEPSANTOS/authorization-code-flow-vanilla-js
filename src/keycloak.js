@@ -23,14 +23,35 @@ class Keycloak {
 
     #init() {
         this.#code_verifier = this.#generateCodeVerifier();
-        
+
         this.#generateCodeChallenge()
             .then(code_challenge => this.#code_challenge = code_challenge);
 
         this.#code_challenge_method = "S256";
+
+        console.log({ code_challenge: this.#code_challenge, code_verifier: this.#code_verifier });
     }
 
-    getAuthUrl(fn) {
+    getTokenUrl(code) {
+        const url = this.#url + "/realms" + `/${this.#realm}` + "/protocol/openid-connect/token"
+        const body = new URLSearchParams()
+        const headers = { 'Content-Type': 'application/x-www-form-urlencoded' }
+
+        body.append("client_id", this.#client_id);
+        body.append("client_secret", this.#client_secret);
+        body.append("redirect_uri", this.#redirect_uri);
+        body.append("code_verifier", this.#code_verifier);
+        body.append("grant_type", "authorization_code");
+        body.append("code", code);
+
+        return {
+            url,
+            body,
+            headers
+        }
+    }
+
+    getAuthorizationUrl() {
         const queryParams = this.#buildQueryParams({
             scope: this.#scope,
             response_type: this.#response_type,

@@ -15,16 +15,16 @@ export default class Service {
             .withRedirectUri("http://localhost:3000")
             .withResponseType("code")
             .withScope("openid")
-            .withUrl("http://localhost:18080/")
+            .withUrl("http://localhost:18080")
             .build();
-
-        this.#keycloak.getAuthUrl(
-            this.getAuthUrl.bind(this)
-        )
     }
 
-    getAuthUrl() {
-        return this.#keycloak.getAuthUrl();
+    getAuthorizationUrl() {
+        return this.#keycloak.getAuthorizationUrl();
+    }
+
+    getTokenUrl(code) {
+        return this.#keycloak.getTokenUrl(code);
     }
 
 }

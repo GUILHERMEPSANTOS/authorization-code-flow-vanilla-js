@@ -1,11 +1,10 @@
 export default class View {
-    #button = document.getElementById("keycloak-redirect");
-
-
-    configureOnClickRedirectKeycloak(fn) {
-        this.#button.addEventListener("click", (_) => {
-            fn()
+    configureLoadListener(fn) {
+        window.addEventListener("load", () => {
+            const params = new URLSearchParams(window.location.search);
+            fn(params);
         })
     }
+
 }
 

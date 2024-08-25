@@ -1,6 +1,6 @@
 import Controller from "./controller.js";
-import View from "./view.js";
 import Service from "./service.js";
+import View from "./view.js";
 
 const view = new View();
 const service = new Service()

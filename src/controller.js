@@ -9,17 +9,42 @@ export default class Controller {
 
     static init(deps) {
         var controller = new Controller(deps);
-        controller.init();
+        controller
+            .init()
+
         return controller
     }
 
     init() {
-        this.#view.configureOnClickRedirectKeycloak(
-            this.configureOnClickRedirectKeycloak.bind(this)
+        this.#view.configureLoadListener(
+            this.configureLoadListener.bind(this)
         )
     }
 
-    configureOnClickRedirectKeycloak() {
-        window.location.href = this.#service.getAuthUrl();
+    configureLoadListener(params) {
+        const token = sessionStorage.getItem("token");
+        const code = params.get("code")
+
+        // if (!token && code) {
+        //     this.getToken(code);
+        //     return;
+        // }
+
+        // this.redirectToKeycloak();
+    }
+
+    redirectToKeycloak() {
+        const url = this.#service.getAuthorizationUrl();
+        window.location.href = url;
+    }
+
+    async getToken(code) {
+        const requestToken = this.#service.getTokenUrl(code);
+
+        const data = await fetch(requestToken.url, {
+            method: 'POST',
+            headers: requestToken.headers,
+            body: requestToken.body,
+        });
     }
 }
